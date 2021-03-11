@@ -1,0 +1,106 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdkVersion 29
+
+
+
+    signingConfigs {
+
+        releaseConfig {
+            storeFile file("../keystore/ptt.keystore")
+            storePassword "com.imptt.v2"
+            keyAlias "ptt"
+            keyPassword "com.imptt.v2"
+        }
+    }
+
+    def major = 1
+    def minor = 0
+    def revision = 0
+    def build = rootProject.gitCommitCount
+    def vCode = major * 10000 + minor * 1000 + revision * 100 + build
+    def vName = "${major}.${minor}.${revision}.${build}"
+
+    defaultConfig {
+        applicationId "com.apm29.webviewwrapper"
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            //设置支持的SO库架构
+            abiFilters 'armeabi', 'armeabi-v7a' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.releaseConfig
+            manifestPlaceholders = [
+                    ENTRY_ACTION  : "android.intent.action.MAIN",
+                    ENTRY_CATEGORY: "android.intent.category.LAUNCHER"
+            ]
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.releaseConfig
+            manifestPlaceholders = [
+                    ENTRY_ACTION  : "android.intent.action.MAIN",
+                    ENTRY_CATEGORY: "android.intent.category.LAUNCHER"
+            ]
+        }
+
+        pStoreRelease{
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.releaseConfig
+            manifestPlaceholders = [
+                    ENTRY_ACTION  : "pstore.intent.action.MAIN",
+                    ENTRY_CATEGORY: "pstore.intent.category.APP"
+            ]
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+        freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.FlowPreview"
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDir(['libs'])
+        }
+    }
+}
+
+dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.1'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.1'
+    implementation files('libs/pstore-sdk-pstore-2.5.8-release.jar')
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    //agentWeb
+    implementation 'com.just.agentweb:agentweb-androidx:4.1.4' // (必选)
+    implementation 'com.just.agentweb:filechooser-androidx:4.1.4'// (可选)
+    //implementation 'com.download.library:downloader-androidx:4.1.4'// (可选)
+}
