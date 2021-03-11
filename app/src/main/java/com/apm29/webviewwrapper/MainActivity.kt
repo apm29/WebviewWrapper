@@ -1,11 +1,11 @@
 package com.apm29.webviewwrapper
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
 import android.webkit.WebView
 import android.widget.LinearLayout
 import androidx.activity.OnBackPressedCallback
@@ -14,11 +14,34 @@ import com.just.agentweb.WebChromeClient
 
 class MainActivity : AppCompatActivity() {
 
+
+    object PStoreIntent {
+        const val ACTION_LOGIN_SUCCEED = "cybertech.pstore.intent.action.LOGIN_SUCCEED"
+        const val ACTION_PSTORE_EXIT = "cybertech.pstore.intent.action.EXIT"
+    }
+    private val mReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val action = intent.action
+            if (PStoreIntent.ACTION_PSTORE_EXIT == action) {
+                finish()
+            }
+        }
+    }
+    private fun register() {
+        val filter = IntentFilter()
+        filter.addAction(PStoreIntent.ACTION_PSTORE_EXIT)
+        registerReceiver(mReceiver, filter)
+    }
+
+    private fun unregister() {
+        unregisterReceiver(mReceiver)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
-
+        register()
         val mAgentWeb = AgentWeb.with(this)
                 .setAgentWebParent(
                         findViewById(R.id.layoutWebView),
@@ -49,5 +72,10 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
         )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregister()
     }
 }

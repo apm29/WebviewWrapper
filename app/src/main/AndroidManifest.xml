@@ -2,6 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.apm29.webviewwrapper">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+
+    <!-- 用户信息权限 -->
+    <uses-permission android:name="cybertech.permission.READ_PSTORE_USERINFO"/>
+    <!-- 同步时间权限 -->
+    <uses-permission android:name="cybertech.permission.READ_PSTORE_SERVER_SYNC_TIME"/>
+    <!-- 基础权限：授权认证等 -->
+    <uses-permission android:name="cybertech.permission.READ_PSTORE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
