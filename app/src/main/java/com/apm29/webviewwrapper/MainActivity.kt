@@ -43,8 +43,8 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(mReceiver)
     }
 
-    private val homeUrl: String = "http://jwttest.ciih.net/#/cuttingEdgeNews"
-    private val searchUrl: String = "http://www.baidu.com"
+    private val homeUrl: String = "http://sjsytest.ciih.net/#/"
+    private val searchUrl: String = "http://sjsytest.ciih.net/#/search"
 
     lateinit var mAgentWeb: AgentWeb
     private var pageType: Int = 0 // 0首页 1搜索
