@@ -43,8 +43,8 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(mReceiver)
     }
 
-    private val homeUrl: String = "http://sjsytest.ciih.net/#/"
-    private val searchUrl: String = "http://sjsytest.ciih.net/#/search"
+    private val homeUrl: String = "http://20.65.2.12:6070/#/"
+    private val searchUrl: String = "http://20.65.2.12:6070/#/search"
 
     lateinit var mAgentWeb: AgentWeb
     private var pageType: Int = 0 // 0首页 1搜索
