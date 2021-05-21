@@ -12,9 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.webkit.WebView
 import android.widget.LinearLayout
 import androidx.activity.OnBackPressedCallback
-import com.just.agentweb.AgentWeb
-import com.just.agentweb.WebChromeClient
-import com.just.agentweb.WebViewClient
+import com.just.agentweb.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -69,9 +67,13 @@ class MainActivity : AppCompatActivity() {
                         supportActionBar?.title = title
                     }
                 })
+                .setAgentWebWebSettings(AgentWebSettingsImpl())
+                .setOpenOtherPageWays(DefaultWebClient.OpenOtherPageWays.ASK)//打开其他应用时，弹窗咨询用户是否前往其他应用
+                .interceptUnkownUrl() //拦截找不到相关页面的Scheme
                 .createAgentWeb()
                 .ready()
                 .go(homeUrl)
+
 
         onBackPressedDispatcher.addCallback(
                 this,
