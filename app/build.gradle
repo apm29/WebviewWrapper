@@ -20,7 +20,7 @@ android {
 
     def major = 1
     def minor = 0
-    def revision = 0
+    def revision = 3
     def build = rootProject.gitCommitCount
     def vCode = major * 10000 + minor * 1000 + revision * 100 + build
     def vName = "${major}.${minor}.${revision}.${build}"
