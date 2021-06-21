@@ -41,8 +41,9 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(mReceiver)
     }
 
-    private val homeUrl: String = "http://20.65.2.12:6070/#/"
-    private val searchUrl: String = "http://20.65.2.12:6070/#/search"
+    private val homeUrl: String = "${BuildConfig.SERVER_URL}/#/"
+    private val searchUrl: String = "${BuildConfig.SERVER_URL}/#/search"
+    private val logUrl: String = "${BuildConfig.SERVER_URL}/#/logSubmit"
 
     lateinit var mAgentWeb: AgentWeb
     private var pageType: Int = 0 // 0首页 1搜索
@@ -98,18 +99,24 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.main_menu, menu)
         val search = menu.findItem(R.id.menu_search)
         val home = menu.findItem(R.id.menu_home)
-        search.isVisible = pageType != 1
+        search.isVisible = pageType == 0
         home.isVisible = pageType == 1
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        pageType = if (item.itemId == R.id.menu_search) {
-            mAgentWeb.urlLoader.loadUrl(searchUrl)
-            1
-        } else {
-            mAgentWeb.urlLoader.loadUrl(homeUrl)
-            0
+         when (item.itemId) {
+            R.id.menu_search -> {
+                mAgentWeb.urlLoader.loadUrl(searchUrl)
+                pageType = 1
+            }
+            R.id.menu_home -> {
+                mAgentWeb.urlLoader.loadUrl(homeUrl)
+                pageType = 0
+            }
+            else -> {
+                mAgentWeb.urlLoader.loadUrl(logUrl)
+            }
         }
         invalidateOptionsMenu()
         return true
