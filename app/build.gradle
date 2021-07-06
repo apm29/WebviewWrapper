@@ -39,7 +39,7 @@ android {
             abiFilters 'armeabi', 'armeabi-v7a' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
         }
 
-        buildConfigField "String", "CLIENT_ID", '"B7ECB868FBF717187F135EC0DE84C7FA"'
+        buildConfigField "String", "CLIENT_ID", '"238A933AF890132AC51AAE28CBBE3B38"'
     }
 
     buildTypes {
