@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
             OperationLog.OperationType.CODE_LAUNCH,
             OperationLog.OperationResult.CODE_SUCCESS,
             OperationLog.LogType.CODE_USER_OPERATION,
-            "condition=%open-app%"
+            "condition='open-app'"
         )
     }
 
@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
                     OperationLog.OperationType.CODE_OTHER,
                     OperationLog.OperationResult.CODE_SUCCESS,
                     OperationLog.LogType.CODE_USER_OPERATION,
-                    "page=${searchUrl}"
+                    "page='${searchUrl}'"
                 )
             }
             R.id.menu_home -> {
@@ -135,7 +135,7 @@ class MainActivity : AppCompatActivity() {
                     OperationLog.OperationType.CODE_OTHER,
                     OperationLog.OperationResult.CODE_SUCCESS,
                     OperationLog.LogType.CODE_USER_OPERATION,
-                    "page=${homeUrl}"
+                    "page='${homeUrl}'"
                 )
             }
             else -> {
@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity() {
                     OperationLog.OperationType.CODE_OTHER,
                     OperationLog.OperationResult.CODE_SUCCESS,
                     OperationLog.LogType.CODE_USER_OPERATION,
-                    "page=${logUrl}"
+                    "page='${logUrl}'"
                 )
             }
         }
