@@ -17,13 +17,20 @@
     <!--AgentWeb 是默认允许定位的 ，如果你需要该功能 ， 请在你的 AndroidManifest 文件里面加入如下权限 。-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
     <!-- 用户信息权限 -->
     <uses-permission android:name="cybertech.permission.READ_PSTORE_USERINFO"/>
     <!-- 同步时间权限 -->
     <uses-permission android:name="cybertech.permission.READ_PSTORE_SERVER_SYNC_TIME"/>
     <!-- 基础权限：授权认证等 -->
     <uses-permission android:name="cybertech.permission.READ_PSTORE"/>
+    <!--读取链路信息的权限-->
+    <uses-permission android:name="cybertech.permission.READ_PSTORE_LINKINFO"/>
+    <!--读取位置信息的权限-->
+    <uses-permission android:name="cybertech.permission.READ_PSTORE_LOCATIONINFO"/>
+    <!--提交操作日志的权限-->
+    <uses-permission android:name="cybertech.permission.WRITE_PSTORE_OPERATIONLOG"/>
+    <!--提交状态数据的权限-->
+    <uses-permission android:name="cybertech.permission.WRITE_PSTORE_APP_STATE_MONITOR"/>
 
     <application
         android:allowBackup="true"
