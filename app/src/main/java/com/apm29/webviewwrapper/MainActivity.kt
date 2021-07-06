@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.webkit.WebView
 import android.widget.LinearLayout
 import androidx.activity.OnBackPressedCallback
+import cn.com.cybertech.pdk.OperationLog
 import com.just.agentweb.*
 
 class MainActivity : AppCompatActivity() {
@@ -88,6 +89,15 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
         )
+
+
+        OperationLog.logging(
+            this,BuildConfig.CLIENT_ID,"User",
+            OperationLog.OperationType.CODE_LAUNCH,
+            OperationLog.OperationResult.CODE_SUCCESS,
+            OperationLog.LogType.CODE_USER_OPERATION,
+            "condition=%open-app%"
+        )
     }
 
     override fun onDestroy() {
@@ -109,13 +119,34 @@ class MainActivity : AppCompatActivity() {
             R.id.menu_search -> {
                 mAgentWeb.urlLoader.loadUrl(searchUrl)
                 pageType = 1
+                OperationLog.logging(
+                    this,BuildConfig.CLIENT_ID,"User",
+                    OperationLog.OperationType.CODE_OTHER,
+                    OperationLog.OperationResult.CODE_SUCCESS,
+                    OperationLog.LogType.CODE_USER_OPERATION,
+                    "page=${searchUrl}"
+                )
             }
             R.id.menu_home -> {
                 mAgentWeb.urlLoader.loadUrl(homeUrl)
                 pageType = 0
+                OperationLog.logging(
+                    this,BuildConfig.CLIENT_ID,"User",
+                    OperationLog.OperationType.CODE_OTHER,
+                    OperationLog.OperationResult.CODE_SUCCESS,
+                    OperationLog.LogType.CODE_USER_OPERATION,
+                    "page=${homeUrl}"
+                )
             }
             else -> {
                 mAgentWeb.urlLoader.loadUrl(logUrl)
+                OperationLog.logging(
+                    this,BuildConfig.CLIENT_ID,"User",
+                    OperationLog.OperationType.CODE_OTHER,
+                    OperationLog.OperationResult.CODE_SUCCESS,
+                    OperationLog.LogType.CODE_USER_OPERATION,
+                    "page=${logUrl}"
+                )
             }
         }
         invalidateOptionsMenu()
