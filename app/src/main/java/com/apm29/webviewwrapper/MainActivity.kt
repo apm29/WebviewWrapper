@@ -91,13 +91,15 @@ class MainActivity : AppCompatActivity() {
         )
 
 
-        OperationLog.logging(
-            this,BuildConfig.CLIENT_ID,"User",
-            OperationLog.OperationType.CODE_LAUNCH,
-            OperationLog.OperationResult.CODE_SUCCESS,
-            OperationLog.LogType.CODE_USER_OPERATION,
-            "condition='open-app'"
-        )
+        if(!BuildConfig.DEBUG) {
+            OperationLog.logging(
+                this, BuildConfig.CLIENT_ID, "User",
+                OperationLog.OperationType.CODE_LAUNCH,
+                OperationLog.OperationResult.CODE_SUCCESS,
+                OperationLog.LogType.CODE_USER_OPERATION,
+                "condition='open-app'"
+            )
+        }
     }
 
     override fun onDestroy() {
@@ -109,8 +111,10 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.main_menu, menu)
         val search = menu.findItem(R.id.menu_search)
         val home = menu.findItem(R.id.menu_home)
+        val log = menu.findItem(R.id.menu_log)
         search.isVisible = pageType == 0
         home.isVisible = pageType == 1
+        log.isVisible = false
         return true
     }
 
