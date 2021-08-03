@@ -23,12 +23,24 @@
     <LinearLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:orientation="vertical"
-        android:id="@+id/layoutWebView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
+            android:id="@+id/layoutWebView"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical" />
+        <TextView
+            android:textAlignment="center"
+            tools:text="全国备案号：XXXXXXX"
+            android:id="@+id/tvSerialNo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

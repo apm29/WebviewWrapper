@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,8 +12,10 @@ import android.webkit.WebResourceRequest
 import androidx.appcompat.app.AppCompatActivity
 import android.webkit.WebView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import cn.com.cybertech.pdk.OperationLog
+import com.fri.libfriapkrecord.read.SignRecordTools
 import com.just.agentweb.*
 
 class MainActivity : AppCompatActivity() {
@@ -100,6 +103,23 @@ class MainActivity : AppCompatActivity() {
                 "condition='open-app'"
             )
         }
+
+        //系统环境下APK路径
+        val apkPath: String? = getNativeApkPath(this@MainActivity.applicationContext)
+        //读取备案号
+        val recordNum = SignRecordTools.readNumbers(apkPath)
+        findViewById<TextView>(R.id.tvSerialNo).text = "全国注册备案号：$recordNum"
+    }
+
+    //获取系统内APK文件路径
+    private fun getNativeApkPath(context: Context): String? {
+        var apkPath: String? = null
+        try {
+            val applicationInfo = context.applicationInfo ?: return null
+            apkPath = applicationInfo.sourceDir
+        } catch (e: Throwable) {
+        }
+        return apkPath
     }
 
     override fun onDestroy() {
