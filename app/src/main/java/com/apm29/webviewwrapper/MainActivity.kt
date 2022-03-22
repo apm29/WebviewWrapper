@@ -5,14 +5,17 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ApplicationInfo
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import androidx.appcompat.app.AppCompatActivity
 import android.webkit.WebView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import cn.com.cybertech.pdk.OperationLog
 import com.fri.libfriapkrecord.read.SignRecordTools
@@ -59,42 +62,63 @@ class MainActivity : AppCompatActivity() {
         register()
 
         mAgentWeb = AgentWeb.with(this)
-                .setAgentWebParent(
-                        findViewById(R.id.layoutWebView),
-                        LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT,
-                                LinearLayout.LayoutParams.MATCH_PARENT
-                        )
+            .setAgentWebParent(
+                findViewById(R.id.layoutWebView),
+                LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
                 )
-                .useDefaultIndicator()
-                .setWebChromeClient(object : WebChromeClient() {
-                    override fun onReceivedTitle(view: WebView?, title: String?) {
-                        supportActionBar?.title = title
+            )
+            .useDefaultIndicator()
+            .setWebChromeClient(object : WebChromeClient() {
+                override fun onReceivedTitle(view: WebView?, title: String?) {
+                    supportActionBar?.title = title
+                }
+
+
+            })
+            .setWebViewClient(object : WebViewClient() {
+                override fun shouldInterceptRequest(
+                    view: WebView?,
+                    request: WebResourceRequest?
+                ): WebResourceResponse? {
+                    val url = request?.url?.toString()
+                    if(!url.isNullOrEmpty() && url.contains("java") && !BuildConfig.DEBUG){
+                        println(url)
+                        OperationLog.logging(
+                            this@MainActivity, BuildConfig.CLIENT_ID, "User",
+                            OperationLog.OperationType.CODE_OTHER,
+                            OperationLog.OperationResult.CODE_SUCCESS,
+                            OperationLog.LogType.CODE_USER_OPERATION,
+                            "url='${url}'"
+                        )
                     }
-                })
-                .setAgentWebWebSettings(AgentWebSettingsImpl())
-                .setOpenOtherPageWays(DefaultWebClient.OpenOtherPageWays.ASK)//打开其他应用时，弹窗咨询用户是否前往其他应用
-                .interceptUnkownUrl() //拦截找不到相关页面的Scheme
-                .createAgentWeb()
-                .ready()
-                .go(homeUrl)
+                    return super.shouldInterceptRequest(view, request)
+                }
+            })
+            .setAgentWebWebSettings(AgentWebSettingsImpl())
+            .setOpenOtherPageWays(DefaultWebClient.OpenOtherPageWays.ASK)//打开其他应用时，弹窗咨询用户是否前往其他应用
+            .interceptUnkownUrl() //拦截找不到相关页面的Scheme
+            .createAgentWeb()
+            .ready()
+            .go(homeUrl)
 
 
         onBackPressedDispatcher.addCallback(
-                this,
-                object : OnBackPressedCallback(true) {
-                    override fun handleOnBackPressed() {
-                        if (mAgentWeb.webCreator.webView.canGoBack()) {
-                            mAgentWeb.webCreator.webView.goBack()
-                        } else {
-                            finish()
-                        }
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (mAgentWeb.webCreator.webView.canGoBack()) {
+                        mAgentWeb.webCreator.webView.goBack()
+                    } else {
+                        finish()
                     }
                 }
+            }
         )
 
 
-        if(!BuildConfig.DEBUG) {
+        if (!BuildConfig.DEBUG) {
             OperationLog.logging(
                 this, BuildConfig.CLIENT_ID, "User",
                 OperationLog.OperationType.CODE_LAUNCH,
@@ -139,38 +163,56 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-         when (item.itemId) {
+        when (item.itemId) {
             R.id.menu_search -> {
                 mAgentWeb.urlLoader.loadUrl(searchUrl)
                 pageType = 1
-                OperationLog.logging(
-                    this,BuildConfig.CLIENT_ID,"User",
-                    OperationLog.OperationType.CODE_OTHER,
-                    OperationLog.OperationResult.CODE_SUCCESS,
-                    OperationLog.LogType.CODE_USER_OPERATION,
-                    "page='${searchUrl}'"
-                )
+                if (!BuildConfig.DEBUG) {
+                    OperationLog.logging(
+                        this, BuildConfig.CLIENT_ID, "User",
+                        OperationLog.OperationType.CODE_OTHER,
+                        OperationLog.OperationResult.CODE_SUCCESS,
+                        OperationLog.LogType.CODE_USER_OPERATION,
+                        "page='${searchUrl}'"
+                    )
+                }
             }
             R.id.menu_home -> {
                 mAgentWeb.urlLoader.loadUrl(homeUrl)
                 pageType = 0
-                OperationLog.logging(
-                    this,BuildConfig.CLIENT_ID,"User",
-                    OperationLog.OperationType.CODE_OTHER,
-                    OperationLog.OperationResult.CODE_SUCCESS,
-                    OperationLog.LogType.CODE_USER_OPERATION,
-                    "page='${homeUrl}'"
-                )
+                if (!BuildConfig.DEBUG) {
+                    OperationLog.logging(
+                        this, BuildConfig.CLIENT_ID, "User",
+                        OperationLog.OperationType.CODE_OTHER,
+                        OperationLog.OperationResult.CODE_SUCCESS,
+                        OperationLog.LogType.CODE_USER_OPERATION,
+                        "page='${homeUrl}'"
+                    )
+                }
+            }
+            R.id.menu_sign_up -> {
+                if (!BuildConfig.DEBUG) {
+                    OperationLog.logging(
+                        this, BuildConfig.CLIENT_ID, "User",
+                        OperationLog.OperationType.CODE_OTHER,
+                        OperationLog.OperationResult.CODE_SUCCESS,
+                        OperationLog.LogType.CODE_USER_OPERATION,
+                        "signup='success'"
+                    )
+                }
+                Toast.makeText(this,R.string.sign_up_success,Toast.LENGTH_SHORT).show()
             }
             else -> {
                 mAgentWeb.urlLoader.loadUrl(logUrl)
-                OperationLog.logging(
-                    this,BuildConfig.CLIENT_ID,"User",
-                    OperationLog.OperationType.CODE_OTHER,
-                    OperationLog.OperationResult.CODE_SUCCESS,
-                    OperationLog.LogType.CODE_USER_OPERATION,
-                    "page='${logUrl}'"
-                )
+                if (!BuildConfig.DEBUG) {
+                    OperationLog.logging(
+                        this, BuildConfig.CLIENT_ID, "User",
+                        OperationLog.OperationType.CODE_OTHER,
+                        OperationLog.OperationResult.CODE_SUCCESS,
+                        OperationLog.LogType.CODE_USER_OPERATION,
+                        "page='${logUrl}'"
+                    )
+                }
             }
         }
         invalidateOptionsMenu()

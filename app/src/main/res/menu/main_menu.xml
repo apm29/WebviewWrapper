@@ -4,7 +4,7 @@
     <item
         android:id="@+id/menu_search"
         android:title="@string/search_text"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
     <item
         android:visible="false"
         android:id="@+id/menu_home"
@@ -14,5 +14,9 @@
     <item
         android:id="@+id/menu_log"
         android:title="@string/log_text"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_sign_up"
+        android:title="@string/sign_up_text"
+        app:showAsAction="ifRoom"/>
 </menu>
