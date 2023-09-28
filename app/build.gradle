@@ -62,7 +62,7 @@ android {
             buildConfigField("String","SERVER_URL",'"http://sjsytest.ciih.net"')
         }
 
-        pStoreRelease{
+        pStoreRelease {
             minifyEnabled false
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.releaseConfig
