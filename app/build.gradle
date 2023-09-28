@@ -28,7 +28,8 @@ android {
     defaultConfig {
         applicationId "com.apm29.webviewwrapper"
         minSdkVersion 24
-        targetSdkVersion 27
+        //noinspection ExpiredTargetSdkVersion
+        targetSdkVersion 29
         versionCode vCode
         versionName vName
 
