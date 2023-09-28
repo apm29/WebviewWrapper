@@ -95,9 +95,9 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(mReceiver)
     }
 
-    private val homeUrl: String = "${BuildConfig.SERVER_URL}/#/"
-    private val searchUrl: String = "${BuildConfig.SERVER_URL}/#/search"
-    private val logUrl: String = "${BuildConfig.SERVER_URL}/#/logSubmit"
+    private val homeUrl: String = "${BuildConfig.SERVER_URL}/index.html/#/"
+    private val searchUrl: String = "${BuildConfig.SERVER_URL}/index.html/#/search"
+    private val logUrl: String = "${BuildConfig.SERVER_URL}/index.html/#/logSubmit"
 
     lateinit var mAgentWeb: AgentWeb
     private var pageType: Int = 0 // 0首页 1搜索
