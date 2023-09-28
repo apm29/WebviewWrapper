@@ -3,6 +3,8 @@ package com.apm29.webviewwrapper
 import org.junit.Test
 
 import org.junit.Assert.*
+import java.net.URI
+import java.net.URL
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -12,6 +14,9 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+        val base = "http://www.baidu.com:9999/proxy/xxxxxx/"
+        val oldUrl = URL("http://atcc-workshoptest.ciih.net/#/quality-analyse/pareto")
+        val uri = "$base${oldUrl.path.substring(1)}${if (oldUrl.ref != null) "#" else ""}${oldUrl.ref ?: ""}"
+        println(uri)
     }
 }
