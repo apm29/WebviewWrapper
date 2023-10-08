@@ -132,6 +132,10 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
                     }
                     UnifiedAuthorizationUtils.HttpInfo("", "", "", "", "", "")
+                }.also {
+                    runOnUiThread {
+                        Toast.makeText(this@MainActivity, it.resAddress, Toast.LENGTH_LONG).show()
+                    }
                 }
             }
         }
@@ -160,9 +164,9 @@ class MainActivity : AppCompatActivity() {
                 ): WebResourceResponse? {
                     val url = request.url.toString()
                     if (url.contains("/java")) {
-                        runOnUiThread {
-                            Toast.makeText(this@MainActivity, url, Toast.LENGTH_LONG).show()
-                        }
+//                        runOnUiThread {
+//                            Toast.makeText(this@MainActivity, url, Toast.LENGTH_LONG).show()
+//                        }
                         if (!BuildConfig.DEBUG) {
                             OperationLog.logging(
                                 this@MainActivity, BuildConfig.CLIENT_ID, "User",
