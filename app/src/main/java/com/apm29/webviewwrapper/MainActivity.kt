@@ -1,13 +1,14 @@
 package com.apm29.webviewwrapper
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.webkit.*
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -16,22 +17,16 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import cn.com.cybertech.pdk.OperationLog
 import com.fri.libfriapkrecord.read.SignRecordTools
-import com.just.agentweb.AgentWeb
-import com.just.agentweb.AgentWebSettingsImpl
-import com.just.agentweb.DefaultWebClient
+import com.just.agentweb.*
 import com.just.agentweb.WebChromeClient
 import com.just.agentweb.WebViewClient
 import okhttp3.Call
-import okhttp3.Headers
 import okhttp3.Headers.Companion.toHeaders
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.net.URL
 import java.util.*
 import java.util.function.Consumer
-import java.util.function.Function
-import java.util.stream.Collectors
-import java.util.stream.Stream
 
 class MainActivity : AppCompatActivity() {
 
@@ -181,7 +176,50 @@ class MainActivity : AppCompatActivity() {
                     return super.shouldInterceptRequest(view, request)
                 }
             })
-            .setAgentWebWebSettings(AgentWebSettingsImpl())
+//            .setAgentWebWebSettings(object : IAgentWebSettings<WebSettings> {
+//                private var mWebSettings: WebSettings? = null
+//                override fun toSetting(webView: WebView): IAgentWebSettings<*> {
+//                    settings(webView)
+//                    return this
+//                }
+//
+//                @SuppressLint("SetJavaScriptEnabled")
+//                private fun settings(webView: WebView) {
+//                    mWebSettings = webView.settings
+//                    mWebSettings?.javaScriptEnabled = true
+//                    mWebSettings?.setSupportZoom(true)
+//                    mWebSettings?.builtInZoomControls = false
+//                    mWebSettings?.cacheMode = WebSettings.LOAD_NO_CACHE
+//                    mWebSettings?.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+//                    webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+//                    mWebSettings?.textZoom = 100
+//                    mWebSettings?.databaseEnabled = true
+//                    mWebSettings?.loadsImagesAutomatically = true
+//                    mWebSettings?.setSupportMultipleWindows(false)
+//                    // 是否阻塞加载网络图片  协议http or https
+//                    mWebSettings?.blockNetworkImage = false
+//                    // 允许加载本地文件html  file协议
+//                    mWebSettings?.allowFileAccess = true
+//                    // 通过 file url 加载的 Javascript 读取其他的本地文件 .建议关闭
+//                    mWebSettings?.allowFileAccessFromFileURLs = false
+//                    // 允许通过 file url 加载的 Javascript 可以访问其他的源，包括其他的文件和 http，https 等其他的源
+//                    mWebSettings?.allowUniversalAccessFromFileURLs = false
+//                    mWebSettings?.javaScriptCanOpenWindowsAutomatically = true
+//                    mWebSettings?.layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
+//                    mWebSettings?.loadWithOverviewMode = false
+//                    mWebSettings?.useWideViewPort = false
+//                    mWebSettings?.domStorageEnabled = true
+//                    mWebSettings?.setNeedInitialFocus(true)
+//                    mWebSettings?.defaultTextEncodingName = "utf-8" //设置编码格式
+//                    mWebSettings?.defaultFontSize = 16
+//                    mWebSettings?.minimumFontSize = 12 //设置 WebView 支持的最小字体大小，默认为 8
+//                    mWebSettings?.setGeolocationEnabled(true)
+//                }
+//
+//                override fun getWebSettings(): WebSettings {
+//                    return mWebSettings!!
+//                }
+//            })
             .setOpenOtherPageWays(DefaultWebClient.OpenOtherPageWays.ASK)//打开其他应用时，弹窗咨询用户是否前往其他应用
             .interceptUnkownUrl() //拦截找不到相关页面的Scheme
             .createAgentWeb()
