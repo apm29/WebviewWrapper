@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -23,7 +24,17 @@ import com.just.agentweb.AgentWebSettingsImpl
 import com.just.agentweb.DefaultWebClient
 import com.just.agentweb.WebChromeClient
 import com.just.agentweb.WebViewClient
+import okhttp3.Call
+import okhttp3.Headers
+import okhttp3.Headers.Companion.toHeaders
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.net.URL
+import java.util.*
+import java.util.function.Consumer
+import java.util.function.Function
+import java.util.stream.Collectors
+import java.util.stream.Stream
 
 class MainActivity : AppCompatActivity() {
 
@@ -50,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                 PStoreIntent.ACTION_PSTORE_EXIT -> {
                     finish()
                 }
-                PStoreIntent.ACTION_LOGIN_SUCCEED -> {  }
+                PStoreIntent.ACTION_LOGIN_SUCCEED -> {}
 
                 UAIntent.ACTION_UA_LOGIN -> {
                     try {
@@ -76,7 +87,7 @@ class MainActivity : AppCompatActivity() {
                 UAIntent.ACTION_UA_LOGOUT -> {
                     // 统一认证已经注销认证，应当执行自身的注销操作
                     // finish()
-                    Toast.makeText(this@MainActivity,"统一认证已经注销", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MainActivity, "统一认证已经注销", Toast.LENGTH_LONG).show()
                 }
             }
 
@@ -103,6 +114,7 @@ class MainActivity : AppCompatActivity() {
     private fun unregister() {
         unregisterReceiver(mReceiver)
     }
+
     private val mBaseUrl = "http://192.168.0.15:8080" //BuildConfig.SERVER_URL
     private val homeUrl: String = "${mBaseUrl}/#/"
     private val searchUrl: String = "${mBaseUrl}/#/search"
@@ -165,6 +177,8 @@ class MainActivity : AppCompatActivity() {
                                 "url='${url}'"
                             )
                         }
+                    } else {
+                        return handleRequest(url, request.requestHeaders)
                     }
 
                     return super.shouldInterceptRequest(view, request)
@@ -206,6 +220,57 @@ class MainActivity : AppCompatActivity() {
         //读取备案号
         val recordNum = SignRecordTools.readNumbers(apkPath)
         findViewById<TextView>(R.id.tvSerialNo).text = getString(R.string.national_code, recordNum)
+    }
+
+    private val okHttpClient: OkHttpClient = OkHttpClient.Builder().build()
+
+    private fun handleRequest(
+        url: String,
+        requestHeaders: Map<String, String>
+    ): WebResourceResponse? {
+        return try {
+            val appCredential = UnifiedAuthorizationUtils.appCredential
+            val userCredential = UnifiedAuthorizationUtils.userCredential
+            val credentialEncodeMap = mapOf(
+                "appCredential" to (appCredential?:""),
+                "userCredential" to (userCredential?:"")
+            )
+            val newHeaders: Map<String, String> = (requestHeaders + credentialEncodeMap)
+            println(url)
+            println(newHeaders)
+            val call: Call = okHttpClient.newCall(
+                Request.Builder()
+                    .url(url)
+                    .headers(
+                        newHeaders.toHeaders()
+                    )
+                    .build()
+            )
+            val response = call.execute()
+            val responseHeaders: MutableMap<String, String> = HashMap()
+            response.headers.forEach(Consumer { (first, second) ->
+                responseHeaders[first] = second
+            })
+            println(response.header("Content-type"))
+            WebResourceResponse(
+                response.header("Content-type", "text/html"),
+                response.header("Content-encoding", "utf-8"),
+                response.code,
+                response.message ?: "",
+                responseHeaders,
+                response.body?.byteStream()
+            ).also {
+                println(it.mimeType)
+                println(it.encoding)
+                println(it.statusCode)
+                println(it.reasonPhrase)
+                println(it.data)
+            }
+        } catch (e: Exception) {
+            println("错误：${e.message}")
+            e.printStackTrace()
+            null
+        }
     }
 
     private fun getProxyUrl(originalUrl: String): String {

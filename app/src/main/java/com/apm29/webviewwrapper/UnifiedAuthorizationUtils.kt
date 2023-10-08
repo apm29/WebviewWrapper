@@ -65,10 +65,10 @@ object UnifiedAuthorizationUtils {
     private var rawResourceAddressResult: Bundle? = null
     private var rawStaticResourceAddressResult: Bundle? = null
 
-    private val userCredential
+    val userCredential
         get() = rawCredentialResult?.getString("userCredential")
 
-    private val appCredential
+    val appCredential
         get() = rawCredentialResult?.getString("appCredential")
 
     private var resourceList: List<ResourceItem> = listOf()
