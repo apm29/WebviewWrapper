@@ -169,57 +169,14 @@ class MainActivity : AppCompatActivity() {
                                 "url='${url}'"
                             )
                         }
-                    } else {
-                        return handleRequest(url, request.requestHeaders)
+                    }
+                    runOnUiThread {
+                        Toast.makeText(view.context,url,Toast.LENGTH_LONG).show()
                     }
 
                     return super.shouldInterceptRequest(view, request)
                 }
             })
-//            .setAgentWebWebSettings(object : IAgentWebSettings<WebSettings> {
-//                private var mWebSettings: WebSettings? = null
-//                override fun toSetting(webView: WebView): IAgentWebSettings<*> {
-//                    settings(webView)
-//                    return this
-//                }
-//
-//                @SuppressLint("SetJavaScriptEnabled")
-//                private fun settings(webView: WebView) {
-//                    mWebSettings = webView.settings
-//                    mWebSettings?.javaScriptEnabled = true
-//                    mWebSettings?.setSupportZoom(true)
-//                    mWebSettings?.builtInZoomControls = false
-//                    mWebSettings?.cacheMode = WebSettings.LOAD_NO_CACHE
-//                    mWebSettings?.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-//                    webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-//                    mWebSettings?.textZoom = 100
-//                    mWebSettings?.databaseEnabled = true
-//                    mWebSettings?.loadsImagesAutomatically = true
-//                    mWebSettings?.setSupportMultipleWindows(false)
-//                    // 是否阻塞加载网络图片  协议http or https
-//                    mWebSettings?.blockNetworkImage = false
-//                    // 允许加载本地文件html  file协议
-//                    mWebSettings?.allowFileAccess = true
-//                    // 通过 file url 加载的 Javascript 读取其他的本地文件 .建议关闭
-//                    mWebSettings?.allowFileAccessFromFileURLs = false
-//                    // 允许通过 file url 加载的 Javascript 可以访问其他的源，包括其他的文件和 http，https 等其他的源
-//                    mWebSettings?.allowUniversalAccessFromFileURLs = false
-//                    mWebSettings?.javaScriptCanOpenWindowsAutomatically = true
-//                    mWebSettings?.layoutAlgorithm = WebSettings.LayoutAlgorithm.SINGLE_COLUMN
-//                    mWebSettings?.loadWithOverviewMode = false
-//                    mWebSettings?.useWideViewPort = false
-//                    mWebSettings?.domStorageEnabled = true
-//                    mWebSettings?.setNeedInitialFocus(true)
-//                    mWebSettings?.defaultTextEncodingName = "utf-8" //设置编码格式
-//                    mWebSettings?.defaultFontSize = 16
-//                    mWebSettings?.minimumFontSize = 12 //设置 WebView 支持的最小字体大小，默认为 8
-//                    mWebSettings?.setGeolocationEnabled(true)
-//                }
-//
-//                override fun getWebSettings(): WebSettings {
-//                    return mWebSettings!!
-//                }
-//            })
             .setOpenOtherPageWays(DefaultWebClient.OpenOtherPageWays.ASK)//打开其他应用时，弹窗咨询用户是否前往其他应用
             .interceptUnkownUrl() //拦截找不到相关页面的Scheme
             .createAgentWeb()
