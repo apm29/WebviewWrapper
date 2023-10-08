@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(mReceiver)
     }
 
-    private val mBaseUrl = BuildConfig.SERVER_URL
+    private val mBaseUrl = "http://192.168.0.15:8080"//BuildConfig.SERVER_URL
     private val homeUrl: String = "${mBaseUrl}/index.html#/"
     private val searchUrl: String = "${mBaseUrl}/index.html#/search"
     private val logUrl: String = "${mBaseUrl}/index.html#/logSubmit"
@@ -160,6 +160,9 @@ class MainActivity : AppCompatActivity() {
                 ): WebResourceResponse? {
                     val url = request.url.toString()
                     if (url.contains("/java")) {
+                        runOnUiThread {
+                            Toast.makeText(this@MainActivity, url, Toast.LENGTH_LONG).show()
+                        }
                         if (!BuildConfig.DEBUG) {
                             OperationLog.logging(
                                 this@MainActivity, BuildConfig.CLIENT_ID, "User",
