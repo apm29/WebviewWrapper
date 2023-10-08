@@ -16,12 +16,6 @@ import kotlin.jvm.Throws
  *  description : io.apm29.talkie.utils
  */
 
-@Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.FUNCTION)
-annotation class UnifiedAuthorizationResourceId(
-    val value: String
-)
-
 object UnifiedAuthorizationUtils {
 
     data class ResourceItem(
