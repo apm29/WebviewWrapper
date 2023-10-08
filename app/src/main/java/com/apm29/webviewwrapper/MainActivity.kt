@@ -143,8 +143,6 @@ class MainActivity : AppCompatActivity() {
 
         val newUrl: String = getProxyUrl(homeUrl)
 
-        val agentWebSettingsImpl = AgentWebSettingsImpl()
-        agentWebSettingsImpl.webSettings.cacheMode = WebSettings.LOAD_NO_CACHE
         mAgentWeb = AgentWeb.with(this)
             .setAgentWebParent(
                 findViewById(R.id.layoutWebView),
@@ -183,13 +181,15 @@ class MainActivity : AppCompatActivity() {
                     return super.shouldInterceptRequest(view, request)
                 }
             })
-            .setAgentWebWebSettings(agentWebSettingsImpl)
+            .setAgentWebWebSettings(AgentWebSettingsImpl())
             .setOpenOtherPageWays(DefaultWebClient.OpenOtherPageWays.ASK)//打开其他应用时，弹窗咨询用户是否前往其他应用
             .interceptUnkownUrl() //拦截找不到相关页面的Scheme
             .createAgentWeb()
             .ready()
             .go(newUrl)
+
         mAgentWeb.clearWebCache()
+
         onBackPressedDispatcher.addCallback(
             this,
             object : OnBackPressedCallback(true) {
@@ -231,8 +231,8 @@ class MainActivity : AppCompatActivity() {
             val appCredential = UnifiedAuthorizationUtils.appCredential
             val userCredential = UnifiedAuthorizationUtils.userCredential
             val credentialEncodeMap = mapOf(
-                "appCredential" to (appCredential?:""),
-                "userCredential" to (userCredential?:"")
+                "appCredential" to (appCredential ?: ""),
+                "userCredential" to (userCredential ?: "")
             )
             val newHeaders: Map<String, String> = (requestHeaders + credentialEncodeMap)
             println(url)
