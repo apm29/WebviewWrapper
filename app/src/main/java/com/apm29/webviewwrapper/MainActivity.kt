@@ -108,9 +108,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val mBaseUrl = BuildConfig.SERVER_URL
-    private val homeUrl: String = "${mBaseUrl}/index.html/#/"
-    private val searchUrl: String = "${mBaseUrl}/index.html/#/search"
-    private val logUrl: String = "${mBaseUrl}/index.html/#/logSubmit"
+    private val homeUrl: String = "${mBaseUrl}/index.html/"
+    private val searchUrl: String = "${mBaseUrl}/index.html/search"
+    private val logUrl: String = "${mBaseUrl}/index.html/logSubmit"
 
     lateinit var mAgentWeb: AgentWeb
     private var pageType: Int = 0 // 0首页 1搜索
