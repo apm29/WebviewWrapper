@@ -8,10 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.webkit.JavascriptInterface
-import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
-import android.webkit.WebView
+import android.webkit.*
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -146,6 +143,8 @@ class MainActivity : AppCompatActivity() {
 
         val newUrl: String = getProxyUrl(homeUrl)
 
+        val agentWebSettingsImpl = AgentWebSettingsImpl()
+        agentWebSettingsImpl.webSettings.cacheMode = WebSettings.LOAD_NO_CACHE
         mAgentWeb = AgentWeb.with(this)
             .setAgentWebParent(
                 findViewById(R.id.layoutWebView),
@@ -184,13 +183,13 @@ class MainActivity : AppCompatActivity() {
                     return super.shouldInterceptRequest(view, request)
                 }
             })
-            .setAgentWebWebSettings(AgentWebSettingsImpl())
+            .setAgentWebWebSettings(agentWebSettingsImpl)
             .setOpenOtherPageWays(DefaultWebClient.OpenOtherPageWays.ASK)//打开其他应用时，弹窗咨询用户是否前往其他应用
             .interceptUnkownUrl() //拦截找不到相关页面的Scheme
             .createAgentWeb()
             .ready()
             .go(newUrl)
-
+        mAgentWeb.clearWebCache()
         onBackPressedDispatcher.addCallback(
             this,
             object : OnBackPressedCallback(true) {
