@@ -170,10 +170,6 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                     }
-                    runOnUiThread {
-                        Toast.makeText(view.context,url,Toast.LENGTH_LONG).show()
-                    }
-
                     return super.shouldInterceptRequest(view, request)
                 }
             })
