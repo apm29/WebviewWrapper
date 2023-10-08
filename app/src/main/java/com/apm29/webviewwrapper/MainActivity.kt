@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(mReceiver)
     }
 
-    private val mBaseUrl = "http://192.168.0.15:8080"//BuildConfig.SERVER_URL
+    private val mBaseUrl = BuildConfig.SERVER_URL
     private val homeUrl: String = "${mBaseUrl}/index.html#/"
     private val searchUrl: String = "${mBaseUrl}/index.html#/search"
     private val logUrl: String = "${mBaseUrl}/index.html#/logSubmit"
