@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import cn.com.cybertech.pdk.OperationLog
+import cn.com.cybertech.pdk.utils.GsonUtils
 import com.fri.libfriapkrecord.read.SignRecordTools
 import com.just.agentweb.*
 import com.just.agentweb.WebChromeClient
@@ -123,19 +124,22 @@ class MainActivity : AppCompatActivity() {
 
         class UnifiedAuthorization {
             @JavascriptInterface
-            fun getHttpRequestInfo(resId: String): UnifiedAuthorizationUtils.HttpInfo {
+            fun getHttpRequestInfo(resId: String): String {
                 return try {
-                    UnifiedAuthorizationUtils.getHttpRequestInfo(resId, this@MainActivity)
+                    GsonUtils.toJson(UnifiedAuthorizationUtils.getHttpRequestInfo(resId, this@MainActivity))
                 } catch (e: Exception) {
                     e.printStackTrace()
                     runOnUiThread {
                         Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
                     }
-                    UnifiedAuthorizationUtils.HttpInfo("", "", "", "", "", "")
-                }.also {
-                    runOnUiThread {
-                        Toast.makeText(this@MainActivity, it.resAddress, Toast.LENGTH_LONG).show()
-                    }
+                    GsonUtils.toJson(UnifiedAuthorizationUtils.HttpInfo("", "", "", "", "", ""))
+                }
+            }
+
+            @JavascriptInterface
+            fun toast(str:String){
+                runOnUiThread {
+                    Toast.makeText(this@MainActivity, str, Toast.LENGTH_LONG).show()
                 }
             }
         }
