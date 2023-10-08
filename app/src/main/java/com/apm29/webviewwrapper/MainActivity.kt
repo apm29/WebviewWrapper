@@ -50,11 +50,19 @@ class MainActivity : AppCompatActivity() {
                 PStoreIntent.ACTION_PSTORE_EXIT -> {
                     finish()
                 }
+                PStoreIntent.ACTION_LOGIN_SUCCEED -> {  }
 
                 UAIntent.ACTION_UA_LOGIN -> {
-                    UnifiedAuthorizationUtils.getCredentials(context, true)
-                    UnifiedAuthorizationUtils.getResourceAddress(context, true)
-                    UnifiedAuthorizationUtils.getStaticResourceAddress(context, true)
+                    try {
+                        UnifiedAuthorizationUtils.getCredentials(context, true)
+                        UnifiedAuthorizationUtils.getResourceAddress(context, true)
+                        UnifiedAuthorizationUtils.getStaticResourceAddress(context, true)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        runOnUiThread {
+                            Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                        }
+                    }
                 }
 
                 String.format(
@@ -67,7 +75,8 @@ class MainActivity : AppCompatActivity() {
 
                 UAIntent.ACTION_UA_LOGOUT -> {
                     // 统一认证已经注销认证，应当执行自身的注销操作
-                    finish()
+                    // finish()
+                    Toast.makeText(this@MainActivity,"统一认证已经注销", Toast.LENGTH_LONG).show()
                 }
             }
 
@@ -94,10 +103,10 @@ class MainActivity : AppCompatActivity() {
     private fun unregister() {
         unregisterReceiver(mReceiver)
     }
-
-    private val homeUrl: String = "${BuildConfig.SERVER_URL}/index.html/#/"
-    private val searchUrl: String = "${BuildConfig.SERVER_URL}/index.html/#/search"
-    private val logUrl: String = "${BuildConfig.SERVER_URL}/index.html/#/logSubmit"
+    private val mBaseUrl = "http://192.168.0.15:8080" //BuildConfig.SERVER_URL
+    private val homeUrl: String = "${mBaseUrl}/index.html/#/"
+    private val searchUrl: String = "${mBaseUrl}/index.html/#/search"
+    private val logUrl: String = "${mBaseUrl}/index.html/#/logSubmit"
 
     lateinit var mAgentWeb: AgentWeb
     private var pageType: Int = 0 // 0首页 1搜索
@@ -146,7 +155,6 @@ class MainActivity : AppCompatActivity() {
                     request: WebResourceRequest
                 ): WebResourceResponse? {
                     val url = request.url.toString()
-                    println(url)
                     if (url.contains("/java")) {
                         if (!BuildConfig.DEBUG) {
                             OperationLog.logging(
