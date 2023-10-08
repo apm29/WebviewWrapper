@@ -251,21 +251,14 @@ class MainActivity : AppCompatActivity() {
             response.headers.forEach(Consumer { (first, second) ->
                 responseHeaders[first] = second
             })
-            println(response.header("Content-type"))
             WebResourceResponse(
                 response.header("Content-type", "text/html"),
                 response.header("Content-encoding", "utf-8"),
                 response.code,
-                response.message ?: "",
+                response.message,
                 responseHeaders,
                 response.body?.byteStream()
-            ).also {
-                println(it.mimeType)
-                println(it.encoding)
-                println(it.statusCode)
-                println(it.reasonPhrase)
-                println(it.data)
-            }
+            )
         } catch (e: Exception) {
             println("错误：${e.message}")
             e.printStackTrace()
