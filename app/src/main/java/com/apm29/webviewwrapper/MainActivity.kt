@@ -1,14 +1,15 @@
 package com.apm29.webviewwrapper
 
-import android.annotation.SuppressLint
+import com.didichuxing.doraemonkit.DoKit
+import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.webkit.*
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -31,7 +32,7 @@ import java.util.function.Consumer
 
 class MainActivity : AppCompatActivity() {
 
-
+    val tag = "市局主页"
     object PStoreIntent {
         const val ACTION_LOGIN_SUCCEED = "cybertech.pstore.intent.action.LOGIN_SUCCEED"
         const val ACTION_PSTORE_EXIT = "cybertech.pstore.intent.action.EXIT"
@@ -108,7 +109,7 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(mReceiver)
     }
 
-    private val mBaseUrl = "http://192.168.0.15:8080" //BuildConfig.SERVER_URL
+    private val mBaseUrl = BuildConfig.SERVER_URL
     private val homeUrl: String = "${mBaseUrl}/index.html#/"
     private val searchUrl: String = "${mBaseUrl}/index.html#/search"
     private val logUrl: String = "${mBaseUrl}/index.html#/logSubmit"
@@ -150,7 +151,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         val newUrl: String = getProxyUrl(homeUrl)
-
         mAgentWeb = AgentWeb.with(this)
             .setAgentWebParent(
                 findViewById(R.id.layoutWebView),
@@ -167,15 +167,13 @@ class MainActivity : AppCompatActivity() {
             })
             .addJavascriptInterface("UnifiedAuthorization", UnifiedAuthorization())
             .setWebViewClient(object : WebViewClient() {
-                override fun shouldInterceptRequest(
-                    view: WebView,
-                    request: WebResourceRequest
-                ): WebResourceResponse? {
-                    val url = request.url.toString()
+                override fun shouldOverrideUrlLoading(
+                    view: WebView?,
+                    request: WebResourceRequest?
+                ): Boolean {
+                    val url = request?.url.toString()
                     if (url.contains("/java")) {
-//                        runOnUiThread {
-//                            Toast.makeText(this@MainActivity, url, Toast.LENGTH_LONG).show()
-//                        }
+                        Log.d(tag,"request url: $url")
                         if (!BuildConfig.DEBUG) {
                             OperationLog.logging(
                                 this@MainActivity, BuildConfig.CLIENT_ID, "User",
@@ -185,11 +183,14 @@ class MainActivity : AppCompatActivity() {
                                 "url='${url}'"
                             )
                         }
+                    } else {
+                        Log.d(tag,"resources url: $url")
                     }
-                    return super.shouldInterceptRequest(view, request)
+                    return super.shouldOverrideUrlLoading(view, request)
                 }
             })
             .setOpenOtherPageWays(DefaultWebClient.OpenOtherPageWays.ASK)//打开其他应用时，弹窗咨询用户是否前往其他应用
+            .setAgentWebWebSettings(AgentWebSettingsImpl())
             .interceptUnkownUrl() //拦截找不到相关页面的Scheme
             .createAgentWeb()
             .ready()
@@ -226,6 +227,14 @@ class MainActivity : AppCompatActivity() {
         //读取备案号
         val recordNum = SignRecordTools.readNumbers(apkPath)
         findViewById<TextView>(R.id.tvSerialNo).text = getString(R.string.national_code, recordNum)
+
+        DoKit.Builder(application)
+            .alwaysShowMainIcon(false)
+            .build()
+        findViewById<TextView>(R.id.tvSerialNo).setOnLongClickListener {
+            DoKit.showToolPanel()
+            true
+        }
     }
 
     private val okHttpClient: OkHttpClient = OkHttpClient.Builder().build()
