@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(mReceiver)
     }
 
-    private val mBaseUrl = BuildConfig.SERVER_URL
+    private val mBaseUrl = "http://192.168.0.15:8080" //BuildConfig.SERVER_URL
     private val homeUrl: String = "${mBaseUrl}/index.html#/"
     private val searchUrl: String = "${mBaseUrl}/index.html#/search"
     private val logUrl: String = "${mBaseUrl}/index.html#/logSubmit"
@@ -126,7 +126,12 @@ class MainActivity : AppCompatActivity() {
             @JavascriptInterface
             fun getHttpRequestInfo(resId: String): String {
                 return try {
-                    GsonUtils.toJson(UnifiedAuthorizationUtils.getHttpRequestInfo(resId, this@MainActivity))
+                    val httpRequestInfo =
+                        UnifiedAuthorizationUtils.getHttpRequestInfo(resId, this@MainActivity)
+                    runOnUiThread {
+                        Toast.makeText(this@MainActivity, httpRequestInfo.resAddress, Toast.LENGTH_LONG).show()
+                    }
+                    GsonUtils.toJson(httpRequestInfo)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     runOnUiThread {
