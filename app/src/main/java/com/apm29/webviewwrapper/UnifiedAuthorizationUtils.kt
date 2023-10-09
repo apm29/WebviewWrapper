@@ -7,6 +7,7 @@ import androidx.core.os.bundleOf
 import cn.com.cybertech.pdk.utils.GsonUtils
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
+import java.net.URLEncoder
 import java.util.UUID
 import kotlin.jvm.Throws
 
@@ -80,8 +81,8 @@ object UnifiedAuthorizationUtils {
         return if (resourceItem != null && appCredential != null && userCredential != null) {
             HttpInfo(
                 UUID.randomUUID().toString(),
-                appCredential!!,
-                userCredential!!,
+                URLEncoder.encode(appCredential!!,"UTF-8"),
+                URLEncoder.encode(userCredential!!,"UTF-8"),
                 resourceItem.resourceId,
                 resourceItem.resourceRegionalismCode,
                 resourceItem.resourceAddress
