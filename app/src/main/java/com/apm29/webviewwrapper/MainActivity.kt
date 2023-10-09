@@ -129,9 +129,6 @@ class MainActivity : AppCompatActivity() {
                 return try {
                     val httpRequestInfo =
                         UnifiedAuthorizationUtils.getHttpRequestInfo(resId, this@MainActivity)
-                    runOnUiThread {
-                        Toast.makeText(this@MainActivity, httpRequestInfo.resAddress, Toast.LENGTH_LONG).show()
-                    }
                     GsonUtils.toJson(httpRequestInfo)
                 } catch (e: Exception) {
                     e.printStackTrace()
